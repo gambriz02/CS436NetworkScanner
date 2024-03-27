@@ -1,0 +1,15 @@
+# Send network probe packets
+
+    # use nmap to discover hosts on network
+        #parse nmap for a list of devices on network
+    # use scapy to send packets to hosts and record returned results
+
+# analyze returned results (probably using scapy)
+
+    # Parser for responses
+    # build out a table:
+    # | hostname | IP | MAC | open ports | services |
+
+# display results in GUI (self-explanatory)
+
+    # tkinter
