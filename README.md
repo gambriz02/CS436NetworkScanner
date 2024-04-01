@@ -14,3 +14,4 @@ To run on linux/macOS:
 
 To run on Windows:
   
+    python3 netscan.py
