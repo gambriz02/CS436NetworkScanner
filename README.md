@@ -10,7 +10,7 @@ Install process:
 
 To run on linux/macOS:
 
-      sudo python3 netscan.py
+    sudo python3 netscan.py
 
 To run on Windows:
   
