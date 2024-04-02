@@ -1,10 +1,9 @@
 Current Dependencies:
 - Scapy
 
-
-Install process:
-
     pip install scapy
+
+- Npcap
 
 
 
