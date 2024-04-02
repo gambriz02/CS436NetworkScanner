@@ -1,10 +1,8 @@
 Current Dependencies:
 - Scapy
-- Npcap
-
-
         pip install scapy
 
+- Npcap
 
 To run on linux/macOS:
 
