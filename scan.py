@@ -9,7 +9,7 @@ print_lock = threading.Lock()
 
 #this function discovers hosts by sending out packets using scapy
 def scan(ip):
-    print("performing scan")
+    print("performing scan inside scan")
 
     arp = ARP(pdst=ip)
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
