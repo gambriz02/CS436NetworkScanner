@@ -1,4 +1,5 @@
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
+
 import socket, time, threading
 from queue import Queue
 socket.setdefaulttimeout(0.25) #waits for .25 secs before timing out 
@@ -19,7 +20,11 @@ def scan(ip):
     clients = []
 
     for elem in result:
-        client_dict = {"ip": elem[1].psrc, "mac": elem[1].hwsrc}
+        try:
+            hostname = socket.gethostbyaddr(elem[1].psrc)[0]
+        except socket.herror:
+            hostname = "Unknown"
+        client_dict = {"ip": elem[1].psrc, "mac": elem[1].hwsrc, "hostname": hostname}
         clients.append(client_dict)
     
     return clients
@@ -64,8 +69,4 @@ def threader(q, ip, print_lock):
         q.task_done()
 
 #define a function here for getting the vendor from the MAC address
-
-
-#define a function here for cacheing known devices.
-
 
