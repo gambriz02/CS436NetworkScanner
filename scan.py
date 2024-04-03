@@ -1,4 +1,5 @@
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
+import socket
 
 #this function discovers hosts by sending out packets using scapy
 def scan(ip):
@@ -13,7 +14,11 @@ def scan(ip):
     clients = []
 
     for elem in result:
-        client_dict = {"ip": elem[1].psrc, "mac": elem[1].hwsrc}
+        try:
+            hostname = socket.gethostbyaddr(elem[1].psrc)[0]
+        except socket.herror:
+            hostname = "Unknown"
+        client_dict = {"ip": elem[1].psrc, "mac": elem[1].hwsrc, "hostname": hostname}
         clients.append(client_dict)
     
     return clients
@@ -25,8 +30,4 @@ def display(result):
 #define a function here for port scanning
         
 #define a function here for getting the vendor from the MAC address
-
-
-#define a function here for cacheing known devices.
-
 
