@@ -15,6 +15,7 @@ def main():
         #ip = socket.gethostbyname(hostname) #getting the ip
     
     result = scan(host_ip)
+    print('line 18')
     scanDevices(result)
     display(result)
 

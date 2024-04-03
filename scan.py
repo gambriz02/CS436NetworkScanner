@@ -20,6 +20,7 @@ def scan(ip):
     clients = []
 
     for elem in result:
+        print('ip is ', elem[1].psrc)
         try:
             hostname = socket.gethostbyaddr(elem[1].psrc)[0]
         except socket.herror:
@@ -35,10 +36,12 @@ def display(result):
 
 
 def scanDevices(device_list):
+    print('scanning device list')
     for dev in device_list:
-        scanDevice(dev.ip)
+        scanDevice(dev["ip"])
 
 def scanDevice(ip):
+    print('scanning device ip: ', ip)
     startTime = time.time() #start the timer
     q = Queue() #quue to store tasks
 
