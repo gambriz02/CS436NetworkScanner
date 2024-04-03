@@ -38,15 +38,15 @@ def display(result):
 def scanDevices(device_list):
     print('scanning device list')
     for dev in device_list:
-        scanDevice(dev["ip"])
+        scanDevice(dev["ip"], dev)
 
-def scanDevice(ip):
+def scanDevice(ip, client_dict):
     print('scanning device ip: ', ip)
     startTime = time.time() #start the timer
     q = Queue() #quue to store tasks
 
     for x in range(100): #spawn a 100 threads
-        t = threading.Thread(target= threader, args = (q, ip, print_lock)) #each thread has a queue, ip, and print_lock
+        t = threading.Thread(target= threader, args = (q, ip, print_lock, client_dict)) #each thread has a queue, ip, and print_lock
         t.daemon = True
         t.start()
 
@@ -56,19 +56,21 @@ def scanDevice(ip):
     print('Time taken: ', time.time() - startTime)
 
 #define a function here for port scanning
-def portScan(port, ip, print_lock): #pass in port, ip and print_lock
+def portScan(port, ip, print_lock, client_dict): #pass in port, ip and print_lock
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines a socket object
     try:
         con = s.connect((ip, port)) #establish a connection
         with print_lock:
             print(port, 'is open')
+            client_dict.setdefault('open_ports', []).append(port)
         con.close()
+        
     except:
         pass
-def threader(q, ip, print_lock):
+def threader(q, ip, print_lock, client_dict):
     while True:
         worker = q.get()
-        portScan(worker, ip, print_lock)
+        portScan(worker, ip, print_lock, client_dict)
         q.task_done()
 
 #define a function here for getting the vendor from the MAC address
