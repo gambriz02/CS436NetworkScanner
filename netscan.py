@@ -1,6 +1,4 @@
 from scan import *
-from queue import Queue
-import threading, socket
 
 #Implementation of main! call scan functions and GUI
 def main():
@@ -11,9 +9,6 @@ def main():
 
     print("Your router ip is: ", router_ip)
 
-        #hostname = socket.gethostname() #g  etting the hostname of the machine
-        #ip = socket.gethostbyname(hostname) #getting the ip
-    
     result = scan(host_ip)
     
     print('line 18')
@@ -30,4 +25,3 @@ def get_host_ip():
     
 if __name__ == "__main__":
     main()
-    

@@ -20,7 +20,6 @@ def scan(ip):
     clients = []
 
     for elem in result:
-        print('ip is ', elem[1].psrc)
         try:
             hostname = socket.gethostbyaddr(elem[1].psrc)[0]
         except socket.herror:
