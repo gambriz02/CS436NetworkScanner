@@ -38,7 +38,7 @@ def display(result):
 def scanDevices(device_list):
     print('scanning device list')
     for dev in device_list:
-        scanDevice(dev["ip"], dev)
+        scanDevice(dev["ip"], device_list)
 
 def scanDevice(ip, client_dict):
     print('scanning device ip: ', ip)
