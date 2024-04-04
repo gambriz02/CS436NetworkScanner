@@ -17,6 +17,9 @@ class NetScanGUI:
         self.start_button.pack(pady=5)
 
     def start_scan(self):
+        self.text_area.delete(1.0, tk.END)  # Clear existing content
+        self.log("Scanning... Please wait")  # Display "Scanning... Please wait"
+        
         module_name = 'netscan'
         module_file_path = f'{module_name}.py'
         if os.path.exists(module_file_path):
@@ -30,9 +33,9 @@ class NetScanGUI:
                 self.display_result(result)
                 module.scanDevices(result)
             else:
-                print("Failed to get host IP.")
+                self.log("Failed to get host IP.")
         else:
-            print(f"Error: {module_file_path} does not exist.")
+            self.log(f"Error: {module_file_path} does not exist.")
 
     def display_result(self, result):
         self.text_area.delete(1.0, tk.END)  # Clear existing content
@@ -48,7 +51,8 @@ class NetScanGUI:
 
     def log(self, message):
         self.text_area.insert(tk.END, message + "\n")
-        self.text_area.see(tk.END)
+        self.text_area.update_idletasks()  # Update the GUI to reflect the changes
+        self.text_area.see(tk.END)  # Scroll to the end of the text area
 
 if __name__ == "__main__":
     root = tk.Tk()
