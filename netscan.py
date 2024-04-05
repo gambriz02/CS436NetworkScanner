@@ -11,6 +11,8 @@ def main():
 
     result = scan(host_ip)
 
+    vendLookup(result)
+
     display(result)
 
 if __name__ == "__main__":

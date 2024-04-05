@@ -1,5 +1,6 @@
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
 import socket
+import json
 
 #this function discovers hosts by sending out packets using scapy
 def scan(ip):
@@ -30,4 +31,17 @@ def display(result):
 #define a function here for port scanning
         
 #define a function here for getting the vendor from the MAC address
-
+def vendLookup(dev_list):
+    f = open('mac-vendors-export.json')
+    data = json.load(f)
+    found = False
+    for dev in dev_list:
+        prefix = dev['mac'][0:8]
+        prefix = prefix.upper()
+        print(prefix)
+        dev['vendor'] = "Unknown"
+        for d in data:
+            if d['macPrefix'] == prefix:
+                vendor = d['vendorName']
+                dev['vendor'] = vendor
+        
