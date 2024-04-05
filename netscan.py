@@ -11,7 +11,7 @@ def main():
 
     result = scan(host_ip)
     
-    print('line 18')
+    
     scanDevices(result)
     display(result)
 
