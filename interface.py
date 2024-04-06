@@ -6,20 +6,22 @@ import os
 import importlib.util
 from scan import *
 
-class NetScanGUI:
-    def get_host_ip():
+
+def get_host_ip():
         try:
             router_ip = sr1(IP(dst="www.google.com", ttl=0)/ICMP()/"XXXXXXXXXXX", verbose=False).src
             return router_ip + "/24"
         except Exception as e:
             print("Error getting host IP:", e)
             return None
+class NetScanGUI:
+    
 
     def __init__(self, root):
         self.root = root
         self.root.title("Network Scanner")
 
-        self.text_area = scrolledtext.ScrolledText(root, width=80, height=20)
+        self.text_area = scrolledtext.ScrolledText(root, width=120, height=20)
         self.text_area.pack(pady=10)
 
         self.start_button = tk.Button(root, text="Start Scan", command=self.start_scan, bg="blue", fg="white")
@@ -29,17 +31,18 @@ class NetScanGUI:
         self.text_area.delete(1.0, tk.END)  # Clear existing content
         self.log("Scanning... Please wait")  # Display "Scanning... Please wait"
         
-        module_name = 'netscan'
+        module_name = 'scan'
         module_file_path = f'{module_name}.py'
         if os.path.exists(module_file_path):
             spec = importlib.util.spec_from_file_location(module_name, module_file_path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             # Assuming you want to call the scan function
-            host_ip = module.get_host_ip()  # Get the host_ip from netscan.py
+            host_ip = get_host_ip()
             if host_ip:
                 result = module.scan(host_ip)
                 ports = module.scanDevices(result)
+                module.vendLookup(result)
                 module.display(result)
                 self.display_result(result, ports)
                 
@@ -53,7 +56,7 @@ class NetScanGUI:
         self.log("Scan Results:")
         for item in result:
             ip = item['ip']
-            self.log(f"IP: {ip}, MAC: {item['mac']}, Hostname: {item['hostname']}")
+            self.log(f"IP: {ip}, MAC: {item['mac']}, Hostname: {item['hostname']}, Vendor: {item['vendor']}")
             open_ports = ports.get(ip, [])
             if open_ports:
                 self.log(f"Open ports: {', '.join(map(str, open_ports))}")

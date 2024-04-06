@@ -2,7 +2,7 @@ from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
 
 import json
 
-import socket, time, threading
+import socket, threading
 from queue import Queue
 socket.setdefaulttimeout(0.25) #waits for .25 secs before timing out 
 
@@ -10,7 +10,7 @@ print_lock = threading.Lock()
 
 #this function discovers hosts by sending out packets using scapy
 def scan(ip):
-    print("performing scan inside scan")
+    print(" > discovering hosts on network")
 
     arp = ARP(pdst=ip)
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -20,7 +20,9 @@ def scan(ip):
 
     clients = []
 
+    print (" > getting hostnames via reverse DNS lookup")
     for elem in result:
+        print ("\t> getting hostname of ", elem[1].psrc)
         try:
             hostname = socket.gethostbyaddr(elem[1].psrc)[0]
         except socket.herror:
@@ -36,7 +38,6 @@ def display(result):
 
 
 def scanDevices(device_list):
-    print('scanning device list')
     ports = {}  # Initialize the ports dictionary outside the loop
     for dev in device_list:
         dev_ports = scanDevice(dev["ip"], device_list)
@@ -47,7 +48,7 @@ def scanDevices(device_list):
 
 
 def scanDevice(ip, device_list):
-    print('scanning device ip: ', ip)
+    print(' > performing port scan of: ', ip)
     
     q = Queue() #quue to store tasks
     
@@ -63,7 +64,7 @@ def scanDevice(ip, device_list):
     q.join() #wait for threads to finish their tasks
 
     for ip, open_ports in ports.items():
-        print(f"Open ports for {ip}: {', '.join(map(str, open_ports))}")
+        print(f"\t> Open ports for {ip}: {', '.join(map(str, open_ports))}")
 
     return ports
 
@@ -87,13 +88,14 @@ def threader(q, ip, print_lock, ports):
 
 #define a function here for getting the vendor from the MAC address
 def vendLookup(dev_list):
-    f = open('mac-vendors-export.json')
-    data = json.load(f)
-    found = False
+    print (" > performing vendor lookup using MAC address")
+    with open('mac-vendors-export.json', 'r', encoding='utf-8', errors='ignore') as f:
+        data = json.load(f)
+
     for dev in dev_list:
         prefix = dev['mac'][0:8]
         prefix = prefix.upper()
-        print(prefix)
+        print("\t > getting vendor for prefix: ", prefix)
         dev['vendor'] = "Unknown"
         for d in data:
             if d['macPrefix'] == prefix:
