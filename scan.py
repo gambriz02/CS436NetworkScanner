@@ -1,9 +1,10 @@
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
 
-import socket, threading
+import json
+
+import socket, time, threading
 from queue import Queue
 socket.setdefaulttimeout(0.25) #waits for .25 secs before timing out 
-
 
 print_lock = threading.Lock()
 
@@ -75,7 +76,7 @@ def portScan(port, ip, print_lock, ports): #pass in port, ip and print_lock
         with print_lock:
             ports.setdefault(ip, []).append(port)
         con.close()
-        
+       
     except:
         pass
 def threader(q, ip, print_lock, ports):
@@ -85,3 +86,16 @@ def threader(q, ip, print_lock, ports):
         q.task_done()
 
 #define a function here for getting the vendor from the MAC address
+def vendLookup(dev_list):
+    f = open('mac-vendors-export.json')
+    data = json.load(f)
+    found = False
+    for dev in dev_list:
+        prefix = dev['mac'][0:8]
+        prefix = prefix.upper()
+        print(prefix)
+        dev['vendor'] = "Unknown"
+        for d in data:
+            if d['macPrefix'] == prefix:
+                vendor = d['vendorName']
+                dev['vendor'] = vendor

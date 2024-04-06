@@ -10,9 +10,6 @@ def main():
     print("Your router ip is: ", router_ip)
     
     result = scan(host_ip)
-    
-    
-    ports = scanDevices(result)
     display(result)
 
 def get_host_ip():
