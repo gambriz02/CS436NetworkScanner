@@ -54,10 +54,10 @@ def scanDevice(ip, device_list):
     
     ports = {}
 
-    for x in range(100): #spawn a 100 threads
-        t = threading.Thread(target= threader, args = (q, ip, print_lock, ports)) #each thread has a queue, ip, and print_lock
-        t.daemon = True
-        t.start()
+    for x in range(50): #spawn a 50 threads
+            t = threading.Thread(target= threader, args = (q, ip, print_lock, ports)) #each thread has a queue, ip, and print_lock
+            t.daemon = True
+            t.start()
 
     for worker in range(1, 500):
         q.put(worker)
