@@ -13,7 +13,7 @@ class NetScanGUI:
         self.text_area = scrolledtext.ScrolledText(root, width=80, height=20)
         self.text_area.pack(pady=10)
 
-        self.start_button = tk.Button(root, text="Start Scan", command=self.start_scan)
+        self.start_button = tk.Button(root, text="Start Scan", command=self.start_scan, bg="blue", fg="white")
         self.start_button.pack(pady=5)
 
     def start_scan(self):
@@ -30,24 +30,28 @@ class NetScanGUI:
             host_ip = module.get_host_ip()  # Get the host_ip from netscan.py
             if host_ip:
                 result = module.scan(host_ip)
-                self.display_result(result)
-                module.scanDevices(result)
+                ports = module.scanDevices(result)
+                module.display(result)
+                self.display_result(result, ports)
+                
             else:
                 self.log("Failed to get host IP.")
         else:
             self.log(f"Error: {module_file_path} does not exist.")
 
-    def display_result(self, result):
+    def display_result(self, result, ports):
         self.text_area.delete(1.0, tk.END)  # Clear existing content
         self.log("Scan Results:")
         for item in result:
-            self.log(f"IP: {item['ip']}, MAC: {item['mac']}, Hostname: {item['hostname']}")
-            open_ports = item.get('open_ports', [])
+            ip = item['ip']
+            self.log(f"IP: {ip}, MAC: {item['mac']}, Hostname: {item['hostname']}")
+            open_ports = ports.get(ip, [])
             if open_ports:
-                self.log(f"Open ports for {item['ip']}: {', '.join(map(str, open_ports))}")
+                self.log(f"Open ports: {', '.join(map(str, open_ports))}")
             else:
-                self.log(f"No open ports found for {item['ip']}")
-            self.log("-" * 50)
+                self.log(f"No open ports found")
+        self.log("-" * 50)
+
 
     def log(self, message):
         self.text_area.insert(tk.END, message + "\n")

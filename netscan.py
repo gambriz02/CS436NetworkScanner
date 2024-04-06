@@ -8,11 +8,11 @@ def main():
     host_ip = router_ip+"/24"
 
     print("Your router ip is: ", router_ip)
-
+    
     result = scan(host_ip)
     
     
-    scanDevices(result)
+    ports = scanDevices(result)
     display(result)
 
 def get_host_ip():
