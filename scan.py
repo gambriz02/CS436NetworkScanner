@@ -1,6 +1,6 @@
 from scapy.all import ARP, Ether, srp, sr1, IP, ICMP
 
-import socket, time, threading
+import socket, threading
 from queue import Queue
 socket.setdefaulttimeout(0.25) #waits for .25 secs before timing out 
 
@@ -15,7 +15,7 @@ def scan(ip):
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
     packet = ether/arp
 
-    result = srp(packet, timeout=3, verbose=False)[0]
+    result = srp(packet, timeout=3, verbose=True)[0]
 
     clients = []
 
@@ -47,7 +47,7 @@ def scanDevices(device_list):
 
 def scanDevice(ip, device_list):
     print('scanning device ip: ', ip)
-    startTime = time.time() #start the timer
+    
     q = Queue() #quue to store tasks
     
     ports = {}
@@ -64,8 +64,6 @@ def scanDevice(ip, device_list):
     for ip, open_ports in ports.items():
         print(f"Open ports for {ip}: {', '.join(map(str, open_ports))}")
 
-    
-    print('Time taken: ', time.time() - startTime)
     return ports
 
 #define a function here for port scanning
@@ -75,7 +73,6 @@ def portScan(port, ip, print_lock, ports): #pass in port, ip and print_lock
     try:
         con = s.connect((ip, port)) #establish a connection
         with print_lock:
-            print(port, 'is open')
             ports.setdefault(ip, []).append(port)
         con.close()
         

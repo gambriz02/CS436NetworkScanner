@@ -4,8 +4,17 @@ import threading
 import socket
 import os
 import importlib.util
+from scan import *
 
 class NetScanGUI:
+    def get_host_ip():
+        try:
+            router_ip = sr1(IP(dst="www.google.com", ttl=0)/ICMP()/"XXXXXXXXXXX", verbose=False).src
+            return router_ip + "/24"
+        except Exception as e:
+            print("Error getting host IP:", e)
+            return None
+
     def __init__(self, root):
         self.root = root
         self.root.title("Network Scanner")
